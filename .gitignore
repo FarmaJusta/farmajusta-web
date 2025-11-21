@@ -1,0 +1,69 @@
+# =========================
+# ARCHIVOS DE LOGS
+# =========================
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# =========================
+# DEPENDENCIAS
+# =========================
+node_modules/
+
+# =========================
+# COMPILADOS / BUILD OUTPUT
+# =========================
+.next/
+out/
+dist/
+.next/cache/
+
+# =========================
+# COVERAGE / TESTS
+# =========================
+coverage/
+*.lcov
+
+# =========================
+# TYPECRIPT
+# =========================
+*.tsbuildinfo
+
+# =========================
+# ENTORNOS / VARIABLES
+# =========================
+.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# =========================
+# HERRAMIENTAS / BUILDS
+# =========================
+.turbo/
+.vercel/
+
+# =========================
+# SISTEMA OPERATIVO
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# EDITORES / IDE
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+# GIT / MISC
+# =========================
+.git/
+.gitconfig

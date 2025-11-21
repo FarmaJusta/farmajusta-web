@@ -1,0 +1,12 @@
+# Forzar estilo Unix LF en todo
+* text=auto eol=lf
+
+# Excepciones (Binarios o assets)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.svg binary
+*.ico binary
+*.pdf binary
+*.mp4 binary
