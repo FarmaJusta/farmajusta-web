@@ -110,4 +110,4 @@ La estructura está pensada para un proyecto Next.js con App Router y componente
 └── .gitattributes            # Normalización de fin de línea (EOL) y binarios
 ```
 
-## Hola Jira prueba 3
+## Hola Jira prueba 4
