@@ -108,3 +108,6 @@ La estructura está pensada para un proyecto Next.js con App Router y componente
 ├── next.config.mjs           # Configuración de Next.js
 ├── .gitignore                # Archivos y carpetas ignorados por Git
 └── .gitattributes            # Normalización de fin de línea (EOL) y binarios
+```
+
+## Hola Jira
