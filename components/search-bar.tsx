@@ -11,13 +11,13 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export function SearchBar() {
-  const { 
-    searchQuery, 
-    filters, 
-    setSearchQuery, 
-    setFilters, 
+  const {
+    searchQuery,
+    filters,
+    setSearchQuery,
+    setFilters,
     performSearch,
-    clearSearch 
+    clearSearch
   } = useAppStore();
 
   const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
@@ -93,10 +93,10 @@ export function SearchBar() {
     });
   };
 
-  const hasActiveFilters = 
-    searchQuery || 
-    filters.type !== 'todos' || 
-    filters.priceRange[0] !== 0 || 
+  const hasActiveFilters =
+    searchQuery ||
+    filters.type !== 'todos' ||
+    filters.priceRange[0] !== 0 ||
     filters.priceRange[1] !== 500 ||
     filters.maxDistance !== '10km' ||
     filters.onlyInStock;
@@ -128,7 +128,7 @@ export function SearchBar() {
             </Button>
           )}
         </div>
-        
+
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="outline" size="lg" className="h-12 relative">
@@ -145,7 +145,7 @@ export function SearchBar() {
             <SheetHeader>
               <SheetTitle>Filtros de Búsqueda</SheetTitle>
             </SheetHeader>
-            
+
             <div className="grid gap-6 py-6">
               {/* Tipo de Medicamento */}
               <div className="space-y-2">
@@ -209,8 +209,8 @@ export function SearchBar() {
 
               {/* Buttons */}
               <div className="flex gap-2">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="flex-1"
                   onClick={handleClearFilters}
                 >
@@ -276,30 +276,30 @@ export function SearchBar() {
       {/* Quick Filters */}
       <div className="flex flex-wrap items-center gap-2 max-w-4xl mx-auto">
         <span className="text-sm text-muted-foreground">Filtros rápidos:</span>
-        <Badge 
-          variant="secondary" 
+        <Badge
+          variant="secondary"
           className="cursor-pointer hover:bg-[#db1a85]/10 hover:text-[#db1a85] border-[#db1a85]/20"
           onClick={() => handleQuickFilter('cerca', null)}
         >
           <MapPin className="h-3 w-3 mr-1" />
           Cerca de mí
         </Badge>
-        <Badge 
-          variant="secondary" 
+        <Badge
+          variant="secondary"
           className="cursor-pointer hover:bg-[#0ec1ac]/10 hover:text-[#0ec1ac] border-[#0ec1ac]/20"
           onClick={() => handleQuickFilter('genericos', null)}
         >
           Genéricos
         </Badge>
-        <Badge 
-          variant="secondary" 
+        <Badge
+          variant="secondary"
           className="cursor-pointer hover:bg-[#db1a85]/10 hover:text-[#db1a85] border-[#db1a85]/20"
           onClick={() => handleQuickFilter('ofertas', null)}
         >
           Ofertas
         </Badge>
-        <Badge 
-          variant="secondary" 
+        <Badge
+          variant="secondary"
           className="cursor-pointer hover:bg-secondary/80"
           onClick={() => handleQuickFilter('stock', null)}
         >
@@ -316,9 +316,9 @@ export function SearchBar() {
           </div>
           <div className="flex flex-wrap gap-2">
             {recentSearches.map((search, index) => (
-              <Badge 
+              <Badge
                 key={index}
-                variant="outline" 
+                variant="outline"
                 className="cursor-pointer hover:bg-accent"
                 onClick={() => {
                   setLocalSearchQuery(search);

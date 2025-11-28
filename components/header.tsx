@@ -1,157 +1,237 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { useAppStore, useCartItemCount } from "@/lib/store";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { CartModal } from "@/components/cart-modal";
-import { ProfileModal } from "@/components/profile-modal";
-import { LocationModal } from "@/components/location-modal";
-import { MapPin, Heart, ShoppingCart, Menu, User } from 'lucide-react';
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { ModeToggle } from "@/components/mode-toggle";
+import { useState, useEffect, useMemo } from "react"
+import { useRouter, usePathname } from "next/navigation"
+import { useFarmaJustaStore } from "@/lib/farmajusta-store"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { OrdersModal } from "@/components/orders-modal"
+import ProfileModal from "@/components/profile-modal"
+import { LocationModal } from "@/components/location-modal"
+import { MapPin, Heart, ShoppingBag, Menu, User, Home, Search, Pill } from "lucide-react"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { ModeToggle } from "@/components/mode-toggle"
+import Link from "next/link"
 
 export function Header() {
-  const [location, setLocation] = useState("Lima, Perú");
-  const [showCartModal, setShowCartModal] = useState(false);
-  const [showLocationModal, setShowLocationModal] = useState(false);
-  const [showProfileModal, setShowProfileModal] = useState(false);
-  const { favorites } = useAppStore();
-  const cartItemCount = useCartItemCount();
-  const favoriteCount = favorites.length;
+  const router = useRouter()
+  const pathname = usePathname()
+  const [mounted, setMounted] = useState(false)
+  const [showOrdersModal, setShowOrdersModal] = useState(false)
+  const [showLocationModal, setShowLocationModal] = useState(false)
+  const [showProfileModal, setShowProfileModal] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  const shoppingList = useFarmaJustaStore((state) => state.shoppingList)
+  const favorites = useFarmaJustaStore((state) => state.favorites)
+  const userLocation = useFarmaJustaStore((state) => state.userLocation)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const ordersCount = useMemo(() => {
+    if (!mounted) return 0
+    return shoppingList.reduce((count, item) => count + item.quantity, 0)
+  }, [mounted, shoppingList])
+
+  const favoriteCount = useMemo(() => {
+    if (!mounted) return 0
+    return favorites.length
+  }, [mounted, favorites])
+
+  const locationText = useMemo(() => {
+    if (!mounted || !userLocation?.address) return "Lima, Perú"
+    return userLocation.address
+  }, [mounted, userLocation])
+
+  const handleMobileAction = (action: () => void) => {
+    setMobileMenuOpen(false)
+    action()
+  }
+
+  const navigateToHome = () => {
+    router.push("/")
+    setMobileMenuOpen(false)
+  }
+
+  const isActive = (path: string) => pathname === path
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
+      <div className="container flex h-14 sm:h-16 items-center justify-between px-4">
         {/* Logo */}
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-r from-brand-pink to-brand-teal text-white">
-              <span className="text-sm font-bold">F</span>
-            </div>
-            <span className="hidden font-bold sm:inline-block bg-linear-to-r from-brand-pink to-brand-teal bg-clip-text text-transparent">
-              FarmaJusta
-            </span>
+        <button
+          onClick={navigateToHome}
+          className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+        >
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-brand-pink to-brand-teal text-white">
+            <span className="text-sm font-bold">F</span>
           </div>
-        </div>
+          <span className="hidden font-bold sm:inline-block bg-gradient-to-r from-brand-pink to-brand-teal bg-clip-text text-transparent">
+            FarmaJusta
+          </span>
+        </button>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6">
-          <Button variant="ghost" size="sm">
-            Medicamentos
+        <nav className="hidden md:flex items-center gap-1">
+          <Button variant={isActive("/") ? "secondary" : "ghost"} size="sm" onClick={navigateToHome} className="gap-2">
+            <Home className="size-4" />
+            Inicio
           </Button>
-          <Button variant="ghost" size="sm">
-            Farmacias
+          <Button variant={isActive("/catalogo") ? "secondary" : "ghost"} size="sm" asChild>
+            <Link href="/catalogo" className="gap-2">
+              <Pill className="size-4" />
+              Catálogo
+            </Link>
           </Button>
-          <Button variant="ghost" size="sm">
-            Ofertas
+          <Button variant={isActive("/buscar") ? "secondary" : "ghost"} size="sm" asChild>
+            <Link href="/buscar" className="gap-2">
+              <Search className="size-4" />
+              Buscar
+            </Link>
           </Button>
         </nav>
 
         {/* Location and Actions */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center gap-1 sm:gap-2">
           {/* Location */}
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="hidden sm:flex items-center space-x-1"
+          <Button
+            variant="ghost"
+            size="sm"
+            className="hidden lg:flex items-center gap-1 max-w-40"
             onClick={() => setShowLocationModal(true)}
           >
-            <MapPin className="h-4 w-4" />
-            <span className="text-sm">{location}</span>
+            <MapPin className="h-4 w-4 text-brand-teal shrink-0" />
+            <span className="text-sm truncate">{locationText}</span>
           </Button>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center space-x-2">
+          <div className="hidden md:flex items-center gap-1">
             <ModeToggle />
-            <Button variant="ghost" size="sm" className="relative">
+            <Button variant="ghost" size="sm" className="relative" onClick={() => setShowProfileModal(true)}>
               <Heart className="h-4 w-4" />
-              <span className="ml-1">Favoritos</span>
+              <span className="hidden lg:inline ml-1">Favoritos</span>
               {favoriteCount > 0 && (
-                <Badge variant="destructive" className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs bg-brand-pink border-brand-pink">
+                <Badge
+                  variant="destructive"
+                  className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs bg-brand-pink border-brand-pink"
+                >
                   {favoriteCount}
                 </Badge>
               )}
             </Button>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="relative"
-              onClick={() => setShowCartModal(true)}
-            >
-              <ShoppingCart className="h-4 w-4" />
-              <span className="ml-1">Carrito</span>
-              {cartItemCount > 0 && (
-                <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs bg-brand-teal hover:bg-brand-teal/90">
-                  {cartItemCount}
+            <Button variant="ghost" size="sm" className="relative" onClick={() => setShowOrdersModal(true)}>
+              <ShoppingBag className="h-4 w-4" />
+              <span className="hidden lg:inline ml-1">Mis Órdenes</span>
+              {ordersCount > 0 && (
+                <Badge
+                  variant="destructive"
+                  className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs bg-brand-teal hover:bg-brand-teal/90"
+                >
+                  {ordersCount}
                 </Badge>
               )}
             </Button>
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => setShowProfileModal(true)}
-            >
+            <Button variant="ghost" size="sm" onClick={() => setShowProfileModal(true)}>
               <User className="h-4 w-4" />
-              <span className="ml-1">Perfil</span>
+              <span className="hidden lg:inline ml-1">Perfil</span>
             </Button>
           </div>
 
           {/* Mobile Menu */}
-          <Sheet>
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="sm" className="md:hidden relative">
+              <Button variant="ghost" size="sm" className="md:hidden relative px-2">
                 <Menu className="h-5 w-5" />
-                {(cartItemCount > 0 || favoriteCount > 0) && (
-                  <Badge variant="destructive" className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs bg-linear-to-r from-brand-pink to-brand-teal">
-                    {cartItemCount + favoriteCount}
+                {(ordersCount > 0 || favoriteCount > 0) && (
+                  <Badge
+                    variant="destructive"
+                    className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs bg-gradient-to-r from-brand-pink to-brand-teal"
+                  >
+                    {ordersCount + favoriteCount}
                   </Badge>
                 )}
               </Button>
             </SheetTrigger>
-            <SheetContent>
+            <SheetContent side="right" className="w-[280px] sm:w-[320px]">
               <div className="grid gap-6 py-6">
                 <div className="flex items-center justify-between">
                   <span className="font-medium">Tema</span>
                   <ModeToggle />
                 </div>
-                
-                <div className="grid gap-3">
+
+                <div className="grid gap-2">
                   <h2 className="text-lg font-semibold">Navegación</h2>
-                  <Button variant="ghost" className="justify-start">
-                    Medicamentos
+                  <Button
+                    variant={isActive("/") ? "secondary" : "ghost"}
+                    className="w-full justify-start"
+                    onClick={navigateToHome}
+                  >
+                    <Home className="mr-2 h-4 w-4" />
+                    Inicio
                   </Button>
-                  <Button variant="ghost" className="justify-start">
-                    Farmacias
+                  <Button
+                    variant={isActive("/catalogo") ? "secondary" : "ghost"}
+                    className="w-full justify-start"
+                    asChild
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Link href="/catalogo">
+                      <Pill className="mr-2 h-4 w-4" />
+                      Catálogo
+                    </Link>
                   </Button>
-                  <Button variant="ghost" className="justify-start">
-                    Ofertas
-                  </Button>
-                </div>
-                
-                <div className="grid gap-3">
-                  <h2 className="text-lg font-semibold">Mi Cuenta</h2>
-                  <Button variant="ghost" className="justify-start">
-                    <Heart className="mr-2 h-4 w-4" />
-                    Favoritos {favoriteCount > 0 && `(${favoriteCount})`}
-                  </Button>
-                  <Button variant="ghost" className="justify-start">
-                    <ShoppingCart className="mr-2 h-4 w-4" />
-                    Carrito {cartItemCount > 0 && `(${cartItemCount})`}
-                  </Button>
-                  <Button variant="ghost" className="justify-start">
-                    <User className="mr-2 h-4 w-4" />
-                    Perfil
+                  <Button
+                    variant={isActive("/buscar") ? "secondary" : "ghost"}
+                    className="w-full justify-start"
+                    asChild
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Link href="/buscar">
+                      <Search className="mr-2 h-4 w-4" />
+                      Buscar
+                    </Link>
                   </Button>
                 </div>
 
-                <div className="grid gap-3">
+                <div className="grid gap-2">
+                  <h2 className="text-lg font-semibold">Mi Cuenta</h2>
+                  <Button
+                    variant="ghost"
+                    className="justify-start"
+                    onClick={() => handleMobileAction(() => setShowProfileModal(true))}
+                  >
+                    <Heart className="mr-2 h-4 w-4" />
+                    Favoritos {favoriteCount > 0 && `(${favoriteCount})`}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    className="justify-start"
+                    onClick={() => handleMobileAction(() => setShowOrdersModal(true))}
+                  >
+                    <ShoppingBag className="mr-2 h-4 w-4" />
+                    Mis Órdenes {ordersCount > 0 && `(${ordersCount})`}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    className="justify-start"
+                    onClick={() => handleMobileAction(() => setShowProfileModal(true))}
+                  >
+                    <User className="mr-2 h-4 w-4" />
+                    Mi Perfil
+                  </Button>
+                </div>
+
+                <div className="grid gap-2">
                   <h2 className="text-lg font-semibold">Ubicación</h2>
-                  <Button variant="ghost" className="justify-start">
+                  <Button
+                    variant="ghost"
+                    className="justify-start"
+                    onClick={() => handleMobileAction(() => setShowLocationModal(true))}
+                  >
                     <MapPin className="mr-2 h-4 w-4" />
-                    {location}
+                    <span className="truncate">{locationText}</span>
                   </Button>
                 </div>
               </div>
@@ -161,71 +241,9 @@ export function Header() {
       </div>
 
       {/* Modales */}
-      <CartModal 
-        isOpen={showCartModal} 
-        onClose={() => setShowCartModal(false)} 
-      />
-      
-      {/* Modal de Ubicación */}
-      <Dialog open={showLocationModal} onOpenChange={setShowLocationModal}>
-        <DialogContent className="max-w-md">
-          <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <MapPin className="h-5 w-5 text-brand-pink" />
-              <h2 className="text-lg font-semibold">Cambiar Ubicación</h2>
-            </div>
-            
-            <div className="space-y-3">
-              <div className="p-3 border rounded-lg bg-muted">
-                <p className="font-medium">Ubicación Actual</p>
-                <p className="text-sm text-muted-foreground">{location}</p>
-              </div>
-              
-              <div className="space-y-2">
-                <label htmlFor="location-input" className="text-sm font-medium">
-                  Nueva Ubicación
-                </label>
-                <Input
-                  id="location-input"
-                  placeholder="Ingresa tu dirección..."
-                  className="w-full"
-                />
-              </div>
-              
-              <div className="flex gap-2">
-                <Button 
-                  variant="outline" 
-                  onClick={() => setShowLocationModal(false)}
-                  className="flex-1"
-                >
-                  Cancelar
-                </Button>
-                <Button 
-                  onClick={() => {
-                    // Aquí iría la lógica para actualizar la ubicación
-                    setShowLocationModal(false);
-                  }}
-                  className="flex-1 bg-brand-pink hover:bg-brand-pink/90 text-white"
-                >
-                  Guardar
-                </Button>
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Profile Modal */}
-      <ProfileModal 
-        isOpen={showProfileModal}
-        onClose={() => setShowProfileModal(false)}
-      />
-
-      {/* Location Modal */}
-      <LocationModal 
-        isOpen={showLocationModal}
-        onClose={() => setShowLocationModal(false)}
-      />
+      <OrdersModal isOpen={showOrdersModal} onClose={() => setShowOrdersModal(false)} />
+      <ProfileModal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} />
+      <LocationModal isOpen={showLocationModal} onClose={() => setShowLocationModal(false)} />
     </header>
-  );
+  )
 }
