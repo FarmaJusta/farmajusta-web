@@ -8,7 +8,6 @@ on:
     push:
         branches:
             - main
-
     workflow_dispatch:
 
 jobs:
@@ -17,12 +16,20 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
+
+            - uses: pnpm/action-setup@v4
+              with:
+                  version: 9
+
             - name: Instalar Vercel CLI
               run: npm install --global vercel@latest
+
             - name: Bajar entorno DEV (Pull)
               run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
             - name: Construir Proyecto (Build)
               run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+
             - name: Desplegar a DEV (Deploy)
               run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
 
@@ -31,11 +38,19 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
+
+            - uses: pnpm/action-setup@v4
+              with:
+                  version: 9
+
             - name: Instalar Vercel CLI
               run: npm install --global vercel@latest
+
             - name: Bajar entorno PROD (Pull)
               run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
             - name: Construir Proyecto (Build)
               run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
             - name: Desplegar a PRODUCCIÓN (Deploy)
               run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
