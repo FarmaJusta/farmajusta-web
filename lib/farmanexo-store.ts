@@ -11,8 +11,8 @@ export interface ShoppingListItem {
     addedAt: string
 }
 
-// Estado de la aplicación FarmaJusta
-interface FarmaJustaState {
+// Estado de la aplicación FarmaNexo
+interface FarmaNexoState {
     // Lista de compras (no carrito - es para llevar a la farmacia)
     shoppingList: ShoppingListItem[]
 
@@ -53,7 +53,7 @@ interface FarmaJustaState {
     clearSearchHistory: () => void
 }
 
-export const useFarmaJustaStore = create<FarmaJustaState>()((set, get) => ({
+export const useFarmaNexoStore = create<FarmaNexoState>()((set, get) => ({
     // Estado inicial
     shoppingList: [],
     favorites: [],

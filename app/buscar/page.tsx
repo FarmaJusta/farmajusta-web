@@ -15,7 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { MapPin, ArrowLeft, Loader2 } from "lucide-react"
 import type { Drug, LocationData, DrugComparisonResult } from "@/lib/types"
 import { compareEquivalentDrugs } from "@/lib/search-service"
-import { mockDrugs } from "@/lib/farmajusta-data"
+import { mockDrugs } from "@/lib/farmanexo-data"
 import { trackSearch, generateSessionId } from "@/lib/analytics-service"
 import { Toaster } from "sonner"
 

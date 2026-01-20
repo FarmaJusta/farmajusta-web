@@ -2,16 +2,24 @@
 
 import { useState, useEffect, useMemo } from "react"
 import { useRouter, usePathname } from "next/navigation"
-import { useFarmaJustaStore } from "@/lib/farmajusta-store"
+import Link from "next/link"
+import { useFarmaNexoStore } from "@/lib/farmanexo-store"
+import { useAuthStore, initializeAuth } from "@/lib/auth-store"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { OrdersModal } from "@/components/orders-modal"
 import ProfileModal from "@/components/profile-modal"
 import { LocationModal } from "@/components/location-modal"
-import { MapPin, Heart, ShoppingBag, Menu, User, Home, Search, Pill } from "lucide-react"
+import { MapPin, Heart, ShoppingBag, Menu, User, Home, Search, Pill, LogIn, LogOut, UserPlus } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { ModeToggle } from "@/components/mode-toggle"
-import Link from "next/link"
 
 export function Header() {
   const router = useRouter()
@@ -22,12 +30,18 @@ export function Header() {
   const [showProfileModal, setShowProfileModal] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  const shoppingList = useFarmaJustaStore((state) => state.shoppingList)
-  const favorites = useFarmaJustaStore((state) => state.favorites)
-  const userLocation = useFarmaJustaStore((state) => state.userLocation)
+  // Auth state
+  const { user, isAuthenticated, logout } = useAuthStore()
+
+  // App state
+  const shoppingList = useFarmaNexoStore((state) => state.shoppingList)
+  const favorites = useFarmaNexoStore((state) => state.favorites)
+  const userLocation = useFarmaNexoStore((state) => state.userLocation)
 
   useEffect(() => {
     setMounted(true)
+    // Inicializar auth desde localStorage
+    initializeAuth()
   }, [])
 
   const ordersCount = useMemo(() => {
@@ -55,7 +69,21 @@ export function Header() {
     setMobileMenuOpen(false)
   }
 
+  const handleLogout = () => {
+    logout()
+    router.push("/")
+    setMobileMenuOpen(false)
+  }
+
   const isActive = (path: string) => pathname === path
+
+  const handleAuthRequired = (action: () => void) => {
+    if (!isAuthenticated) {
+      router.push("/login")
+      return
+    }
+    action()
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
@@ -65,15 +93,15 @@ export function Header() {
           onClick={navigateToHome}
           className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-brand-pink to-brand-teal text-white">
-            <span className="text-sm font-bold">F</span>
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#7C3AED] text-white">
+            <Pill className="size-4" />
           </div>
-          <span className="hidden font-bold sm:inline-block bg-gradient-to-r from-brand-pink to-brand-teal bg-clip-text text-transparent">
-            FarmaJusta
+          <span className="hidden font-bold sm:inline-block text-[#7C3AED]">
+            FarmaNexo
           </span>
         </button>
 
-        {/* Desktop Navigation */}
+        {/* Desktop Navigation - Siempre visible */}
         <nav className="hidden md:flex items-center gap-1">
           <Button variant={isActive("/") ? "secondary" : "ghost"} size="sm" onClick={navigateToHome} className="gap-2">
             <Home className="size-4" />
@@ -95,48 +123,103 @@ export function Header() {
 
         {/* Location and Actions */}
         <div className="flex items-center gap-1 sm:gap-2">
-          {/* Location */}
+          {/* Location - Siempre visible */}
           <Button
             variant="ghost"
             size="sm"
             className="hidden lg:flex items-center gap-1 max-w-40"
             onClick={() => setShowLocationModal(true)}
           >
-            <MapPin className="h-4 w-4 text-brand-teal shrink-0" />
+            <MapPin className="h-4 w-4 text-[#7C3AED] shrink-0" />
             <span className="text-sm truncate">{locationText}</span>
           </Button>
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-1">
             <ModeToggle />
-            <Button variant="ghost" size="sm" className="relative" onClick={() => setShowProfileModal(true)}>
-              <Heart className="h-4 w-4" />
-              <span className="hidden lg:inline ml-1">Favoritos</span>
-              {favoriteCount > 0 && (
-                <Badge
-                  variant="destructive"
-                  className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs bg-brand-pink border-brand-pink"
-                >
-                  {favoriteCount}
-                </Badge>
-              )}
-            </Button>
-            <Button variant="ghost" size="sm" className="relative" onClick={() => setShowOrdersModal(true)}>
-              <ShoppingBag className="h-4 w-4" />
-              <span className="hidden lg:inline ml-1">Mis Órdenes</span>
-              {ordersCount > 0 && (
-                <Badge
-                  variant="destructive"
-                  className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs bg-brand-teal hover:bg-brand-teal/90"
-                >
-                  {ordersCount}
-                </Badge>
-              )}
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => setShowProfileModal(true)}>
-              <User className="h-4 w-4" />
-              <span className="hidden lg:inline ml-1">Perfil</span>
-            </Button>
+
+            {isAuthenticated ? (
+              <>
+                {/* Favoritos - Solo si está logueado */}
+                <Button variant="ghost" size="sm" className="relative" onClick={() => setShowProfileModal(true)}>
+                  <Heart className="h-4 w-4" />
+                  <span className="hidden lg:inline ml-1">Favoritos</span>
+                  {favoriteCount > 0 && (
+                    <Badge
+                      variant="destructive"
+                      className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs bg-[#7C3AED] border-[#7C3AED]"
+                    >
+                      {favoriteCount}
+                    </Badge>
+                  )}
+                </Button>
+
+                {/* Mis Órdenes - Solo si está logueado */}
+                <Button variant="ghost" size="sm" className="relative" onClick={() => setShowOrdersModal(true)}>
+                  <ShoppingBag className="h-4 w-4" />
+                  <span className="hidden lg:inline ml-1">Mis Órdenes</span>
+                  {ordersCount > 0 && (
+                    <Badge
+                      variant="destructive"
+                      className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs bg-brand-coral hover:bg-brand-coral/90"
+                    >
+                      {ordersCount}
+                    </Badge>
+                  )}
+                </Button>
+
+                {/* Menú de usuario */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="gap-2">
+                      <div className="h-6 w-6 rounded-full bg-[#7C3AED] flex items-center justify-center text-white text-xs font-medium">
+                        {user?.name?.charAt(0).toUpperCase() || "U"}
+                      </div>
+                      <span className="hidden lg:inline max-w-24 truncate">{user?.name?.split(" ")[0]}</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <div className="px-2 py-1.5">
+                      <p className="text-sm font-medium truncate">{user?.name}</p>
+                      <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+                    </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => setShowProfileModal(true)}>
+                      <User className="mr-2 h-4 w-4" />
+                      Mi Perfil
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setShowOrdersModal(true)}>
+                      <ShoppingBag className="mr-2 h-4 w-4" />
+                      Mis Órdenes
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setShowProfileModal(true)}>
+                      <Heart className="mr-2 h-4 w-4" />
+                      Favoritos
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Cerrar sesión
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/login" className="gap-2">
+                    <LogIn className="h-4 w-4" />
+                    <span className="hidden lg:inline">Iniciar sesión</span>
+                  </Link>
+                </Button>
+                <Button size="sm" className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white" asChild>
+                  <Link href="/registro" className="gap-2">
+                    <UserPlus className="h-4 w-4" />
+                    <span className="hidden lg:inline">Registrarse</span>
+                  </Link>
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu */}
@@ -144,10 +227,10 @@ export function Header() {
             <SheetTrigger asChild>
               <Button variant="ghost" size="sm" className="md:hidden relative px-2">
                 <Menu className="h-5 w-5" />
-                {(ordersCount > 0 || favoriteCount > 0) && (
+                {isAuthenticated && (ordersCount > 0 || favoriteCount > 0) && (
                   <Badge
                     variant="destructive"
-                    className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs bg-gradient-to-r from-brand-pink to-brand-teal"
+                    className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs bg-[#7C3AED]"
                   >
                     {ordersCount + favoriteCount}
                   </Badge>
@@ -156,11 +239,42 @@ export function Header() {
             </SheetTrigger>
             <SheetContent side="right" className="w-[280px] sm:w-[320px]">
               <div className="grid gap-6 py-6">
+                {isAuthenticated ? (
+                  <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                    <div className="h-10 w-10 rounded-full bg-[#7C3AED] flex items-center justify-center text-white font-medium">
+                      {user?.name?.charAt(0).toUpperCase() || "U"}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium truncate">{user?.name}</p>
+                      <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="grid gap-2">
+                    <Button
+                      className="w-full bg-[#7C3AED] hover:bg-[#6D28D9] text-white"
+                      onClick={() => handleMobileAction(() => router.push("/login"))}
+                    >
+                      <LogIn className="mr-2 h-4 w-4" />
+                      Iniciar sesión
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="w-full bg-transparent border-[#7C3AED] text-[#7C3AED]"
+                      onClick={() => handleMobileAction(() => router.push("/registro"))}
+                    >
+                      <UserPlus className="mr-2 h-4 w-4" />
+                      Crear cuenta
+                    </Button>
+                  </div>
+                )}
+
                 <div className="flex items-center justify-between">
                   <span className="font-medium">Tema</span>
                   <ModeToggle />
                 </div>
 
+                {/* Navegación pública */}
                 <div className="grid gap-2">
                   <h2 className="text-lg font-semibold">Navegación</h2>
                   <Button
@@ -195,34 +309,37 @@ export function Header() {
                   </Button>
                 </div>
 
-                <div className="grid gap-2">
-                  <h2 className="text-lg font-semibold">Mi Cuenta</h2>
-                  <Button
-                    variant="ghost"
-                    className="justify-start"
-                    onClick={() => handleMobileAction(() => setShowProfileModal(true))}
-                  >
-                    <Heart className="mr-2 h-4 w-4" />
-                    Favoritos {favoriteCount > 0 && `(${favoriteCount})`}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    className="justify-start"
-                    onClick={() => handleMobileAction(() => setShowOrdersModal(true))}
-                  >
-                    <ShoppingBag className="mr-2 h-4 w-4" />
-                    Mis Órdenes {ordersCount > 0 && `(${ordersCount})`}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    className="justify-start"
-                    onClick={() => handleMobileAction(() => setShowProfileModal(true))}
-                  >
-                    <User className="mr-2 h-4 w-4" />
-                    Mi Perfil
-                  </Button>
-                </div>
+                {isAuthenticated && (
+                  <div className="grid gap-2">
+                    <h2 className="text-lg font-semibold">Mi Cuenta</h2>
+                    <Button
+                      variant="ghost"
+                      className="justify-start"
+                      onClick={() => handleMobileAction(() => setShowProfileModal(true))}
+                    >
+                      <Heart className="mr-2 h-4 w-4" />
+                      Favoritos {favoriteCount > 0 && `(${favoriteCount})`}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      className="justify-start"
+                      onClick={() => handleMobileAction(() => setShowOrdersModal(true))}
+                    >
+                      <ShoppingBag className="mr-2 h-4 w-4" />
+                      Mis Órdenes {ordersCount > 0 && `(${ordersCount})`}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      className="justify-start"
+                      onClick={() => handleMobileAction(() => setShowProfileModal(true))}
+                    >
+                      <User className="mr-2 h-4 w-4" />
+                      Mi Perfil
+                    </Button>
+                  </div>
+                )}
 
+                {/* Ubicación - Siempre visible */}
                 <div className="grid gap-2">
                   <h2 className="text-lg font-semibold">Ubicación</h2>
                   <Button
@@ -234,15 +351,30 @@ export function Header() {
                     <span className="truncate">{locationText}</span>
                   </Button>
                 </div>
+
+                {isAuthenticated && (
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10 bg-transparent"
+                    onClick={handleLogout}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Cerrar sesión
+                  </Button>
+                )}
               </div>
             </SheetContent>
           </Sheet>
         </div>
       </div>
 
-      {/* Modales */}
-      <OrdersModal isOpen={showOrdersModal} onClose={() => setShowOrdersModal(false)} />
-      <ProfileModal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} />
+      {/* Modales - Solo renderizar si está autenticado */}
+      {isAuthenticated && (
+        <>
+          <OrdersModal isOpen={showOrdersModal} onClose={() => setShowOrdersModal(false)} />
+          <ProfileModal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} />
+        </>
+      )}
       <LocationModal isOpen={showLocationModal} onClose={() => setShowLocationModal(false)} />
     </header>
   )

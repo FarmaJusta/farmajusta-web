@@ -21,8 +21,8 @@ import {
     Navigation,
     Phone,
 } from "lucide-react"
-import { mockPrices, mockBranches } from "@/lib/farmajusta-data"
-import { useFarmaJustaStore } from "@/lib/farmajusta-store"
+import { mockPrices, mockBranches } from "@/lib/farmanexo-data"
+import { useFarmaNexoStore } from "@/lib/farmanexo-store"
 
 interface DrugDetailModalProps {
     drug: Drug | null
@@ -34,7 +34,7 @@ interface DrugDetailModalProps {
 export function DrugDetailModal({ drug, isOpen, onClose, onComparePrices }: DrugDetailModalProps) {
     const [activeTab, setActiveTab] = useState("indications")
     const [addedBranchId, setAddedBranchId] = useState<string | null>(null)
-    const { addToShoppingList } = useFarmaJustaStore()
+    const { addToShoppingList } = useFarmaNexoStore()
 
     const priceInfo = useMemo(() => {
         if (!drug) return null
@@ -451,8 +451,8 @@ export function DrugDetailModal({ drug, isOpen, onClose, onComparePrices }: Drug
                                                 <Button
                                                     size="sm"
                                                     className={`gap-1.5 ${addedBranchId === branch.id
-                                                            ? "bg-green-600 hover:bg-green-600"
-                                                            : "bg-brand-teal hover:bg-brand-teal/90"
+                                                        ? "bg-green-600 hover:bg-green-600"
+                                                        : "bg-brand-teal hover:bg-brand-teal/90"
                                                         }`}
                                                     onClick={() => handleAddToList(price, branch)}
                                                     disabled={price.stockStatus === "OUT_OF_STOCK"}
