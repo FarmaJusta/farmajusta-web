@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useFarmaJustaStore } from "@/lib/farmajusta-store"
+import { useFarmaNexoStore } from "@/lib/farmanexo-store"
 import type { LocationData } from "@/lib/types"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
@@ -86,7 +86,7 @@ const limaDistricts: District[] = [
 ]
 
 export function LocationModal({ isOpen, onClose }: LocationModalProps) {
-  const { userLocation, setUserLocation } = useFarmaJustaStore()
+  const { userLocation, setUserLocation } = useFarmaNexoStore()
   const [selectedDistrict, setSelectedDistrict] = useState<string>(userLocation?.district || "San Isidro")
   const [searchQuery, setSearchQuery] = useState("")
   const [isGettingLocation, setIsGettingLocation] = useState(false)
@@ -290,8 +290,8 @@ export function LocationModal({ isOpen, onClose }: LocationModalProps) {
                     <div
                       key={district.name}
                       className={`p-3 border rounded-lg cursor-pointer transition-all ${selectedDistrict === district.name
-                          ? "border-[#0ec1ac] bg-[#0ec1ac]/5"
-                          : "border-border hover:border-[#0ec1ac]/50"
+                        ? "border-[#0ec1ac] bg-[#0ec1ac]/5"
+                        : "border-border hover:border-[#0ec1ac]/50"
                         }`}
                       onClick={() => setSelectedDistrict(district.name)}
                     >

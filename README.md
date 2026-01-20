@@ -1,113 +1,239 @@
-# 💊 FarmaJusta Web – MVP Comparador de Medicamentos
+# FarmaNexo - Comparador de Precios de Medicamentos
 
-![Next.js](https://img.shields.io/badge/Next.js-16.0.3-black)
-![React](https://img.shields.io/badge/React-19.2.0-61DAFB)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4-38B2AC)
-![Zustand](https://img.shields.io/badge/State%20Management-Zustand-000)
-![Radix UI](https://img.shields.io/badge/UI-Radix%20UI%20%2B%20Custom-6633cc)
+**FarmaNexo** es un comparador de precios de medicamentos en tiempo real para Lima Metropolitana que ayuda a los usuarios a encontrar los mejores precios en farmacias cercanas, promoviendo el acceso equitativo a medicamentos de calidad certificada.
 
-FarmaJusta Web es un **MVP (Producto Mínimo Viable)** para comparar precios de medicamentos en distintas farmacias, ayudando a los pacientes a optimizar su gasto y tomar mejores decisiones entre **genéricos y de marca**, priorizando **ahorro, conveniencia y experiencia de usuario**.
+## 🎯 Objetivos del MVP 1.0 (Fase 1 - 3 meses)
 
-Este proyecto está diseñado como base para una plataforma que, en fases posteriores, integrará datos reales, geolocalización y capacidades de analítica e IA.
+- **Comparador de precios** con geolocalización (radio de 5km)
+- **Chatbot IA "Orientador Farmacéutico"** Lite (solo información educativa, sin diagnósticos)
+- **Métricas clave**: Tasa de Conversión >10%, CAC, Interacciones del Chatbot
 
----
+## 🚀 Características Principales
 
-## 🚀 Objetivo del MVP
+### Funcionalidades Públicas (Sin autenticación)
 
-- Permitir que un usuario **busque medicamentos** y los visualice de forma clara.
-- Simular un flujo sencillo de **selección, comparación y exploración de opciones**.
-- Contar con una **UI moderna y extensible**, lista para conectarse a microservicios y APIs reales en fases posteriores del proyecto FarmaJusta.
+- ✅ Búsqueda de medicamentos por DCI o nombre comercial
+- ✅ Comparación de precios entre farmacias
+- ✅ Visualización de genéricos vs marcas equivalentes
+- ✅ Geolocalización y filtrado por distancia
+- ✅ Catálogo completo de medicamentos
+- ✅ Detalle de medicamentos con información completa
 
----
+### Funcionalidades Privadas (Requieren login)
 
-## ✨ Características principales
+- 🔒 Sistema de autenticación (login, registro, recuperación de contraseña)
+- ⭐ Favoritos: guardar medicamentos favoritos
+- 🛍️ Mis Órdenes: lista de compras organizada por farmacia
+- 👤 Perfil de usuario con historial de búsquedas
+- 🤖 Chatbot IA con orientación farmacéutica
 
-- **🔍 Búsqueda de medicamentos**  
-  Interfaz preparada con barra de búsqueda y componentes reutilizables para filtrar y listar medicamentos.
+## 🛠️ Stack Tecnológico
 
-- **🧾 Fichas de producto**  
-  Tarjetas de medicamentos con información relevante (nombre, presentación, precio, etc.).
+### Frontend
 
-- **🧱 Componentes modulares**  
-  Uso intensivo de componentes desacoplados (`product-card`, `header`, modales, etc.) para facilitar la iteración y escalabilidad del MVP.
+- **Framework**: Next.js 16 (App Router)
+- **Lenguaje**: TypeScript
+- **Estilos**: Tailwind CSS v4
+- **Componentes UI**: shadcn/ui
+- **Gestión de Estado**: Zustand
+- **IA**: Vercel AI SDK v5
+- **Mapas**: Google Maps API
 
-- **🌓 Tema claro/oscuro**  
-  Integración de `next-themes` y componentes compatibles con theming para una experiencia moderna.
+### Herramientas de Desarrollo
 
-- **🧠 Manejo de estado ligero**  
-  Gestión de estado global mediante **Zustand**, ideal para un MVP rápido pero escalable.
+- **Linting**: ESLint
+- **Formateo**: Prettier (configurado en Next.js)
+- **Control de versiones**: Git
 
-- **🎨 UI moderna basada en Radix UI**  
-  Se usan componentes headless de Radix UI combinados con estilos personalizados y patrones similares a shadcn/ui.
+## 📁 Estructura del Proyecto
 
-- **📊 Preparado para analítica y visualizaciones**  
-  Inclusión de **Recharts** para poder representar métricas y comparaciones visuales en futuras iteraciones (por ejemplo, precios promedio, ranking de farmacias, etc.).
-
----
-
-## 🛠️ Stack tecnológico
-
-- **Framework**: [Next.js 16.0.3](https://nextjs.org/) (App Router)
-- **Librería UI**: [React 19.2.0](https://react.dev/)
-- **Lenguaje**: [TypeScript 5](https://www.typescriptlang.org/)
-- **Estilos**:
-  - [Tailwind CSS 4](https://tailwindcss.com/)
-  - Utilidades: `class-variance-authority`, `clsx`, `tailwind-merge`, `tailwindcss-animate`
-- **UI / UX**:
-  - [Radix UI](https://www.radix-ui.com/) (accordion, dialog, toast, tooltip, etc.)
-  - Iconos: [lucide-react](https://lucide.dev/)
-  - Modales, toasts, layout responsive
-- **Estado global**: [Zustand](https://zustand-demo.pmnd.rs/)
-- **Formularios y validación**:
-  - `react-hook-form`
-  - `zod`
-- **Gráficos**:
-  - `recharts`
-- **Otras utilidades**:
-  - `date-fns`
-  - `immer`
-  - `sonner`
-  - `use-sync-external-store`
-
----
-
-## 📂 Estructura del proyecto
-
-La estructura está pensada para un proyecto Next.js con App Router y componentes desacoplados:
-
-```bash
-.
-├── app/                      # Rutas y entrypoints de la aplicación (App Router)
-│   ├── globals.css           # Estilos globales
-│   ├── layout.tsx            # Layout principal de la aplicación
-│   └── page.tsx              # Página principal (Home / Catálogo)
-├── components/               # Componentes de UI y de dominio
-│   ├── ui/                   # Componentes base reutilizables (Radix + estilos)
-│   ├── header.tsx            # Header principal con navegación
-│   ├── search-bar.tsx        # Barra de búsqueda de medicamentos
-│   ├── product-card.tsx      # Tarjeta de medicamento
-│   ├── cart-modal.tsx        # Modal de carrito (estructura lista para integración)
-│   ├── product-detail-modal.tsx # Detalle extendido del medicamento
-│   ├── location-modal.tsx    # Selección / simulación de ubicación
-│   └── profile-modal.tsx     # Modal para perfil de usuario (futuras funcionalidades)
-├── hooks/                    # Hooks personalizados
-│   ├── use-mobile.ts         # Hook para detectar contexto móvil
-│   └── use-toast.ts          # Hook para notificaciones/toasts
-├── lib/                      # Lógica de apoyo y datos simulados
-│   ├── mock-data.ts          # Datos de prueba de medicamentos/farmacias
-│   ├── store.ts              # Store global con Zustand
-│   └── utils.ts              # Helpers y funciones utilitarias
-├── public/                   # Assets estáticos (iconos, imágenes, etc.)
-├── styles/                   # Estilos adicionales
-│   └── globals.css           # Estilos globales (vinculados en app/globals.css)
-├── package.json              # Dependencias y scripts de npm/pnpm
-├── pnpm-lock.yaml            # Lockfile de pnpm (para entornos reproducibles)
-├── tsconfig.json             # Configuración de TypeScript
-├── postcss.config.mjs        # Configuración de PostCSS
-├── next.config.mjs           # Configuración de Next.js
-├── .gitignore                # Archivos y carpetas ignorados por Git
-└── .gitattributes            # Normalización de fin de línea (EOL) y binarios
+```
+proyecto-farma-nexo/
+├── app/                          # App Router de Next.js
+│   ├── api/
+│   │   └── chatbot/
+│   │       └── route.ts         # API del chatbot con AI SDK
+│   ├── buscar/                  # Página de búsqueda y comparación
+│   ├── catalogo/                # Catálogo completo de medicamentos
+│   ├── medicamento/[id]/        # Detalle de medicamento (ruta dinámica)
+│   ├── login/                   # Página de inicio de sesión
+│   ├── registro/                # Página de registro
+│   ├── recuperar-contrasena/   # Recuperación de contraseña
+│   ├── layout.tsx               # Layout raíz con providers
+│   ├── page.tsx                 # Página principal (hero + búsqueda)
+│   └── globals.css              # Estilos globales y tema
+│
+├── components/                   # Componentes reutilizables
+│   ├── ui/                      # Componentes base de shadcn/ui
+│   ├── auth-guard.tsx           # Componente de protección de rutas
+│   ├── chatbot-widget.tsx       # Widget del chatbot
+│   ├── comparison-results.tsx   # Resultados de comparación de precios
+│   ├── drug-catalog.tsx         # Catálogo de medicamentos
+│   ├── drug-detail-modal.tsx    # Modal de detalle de medicamento
+│   ├── drug-search.tsx          # Buscador de medicamentos
+│   ├── header.tsx               # Header con navegación adaptativa
+│   ├── location-modal.tsx       # Modal de selección de ubicación
+│   ├── login-prompt.tsx         # Prompt de login para no autenticados
+│   ├── mode-toggle.tsx          # Toggle de modo claro/oscuro
+│   ├── orders-modal.tsx         # Modal de órdenes/lista de compras
+│   ├── profile-modal.tsx        # Modal de perfil de usuario
+│   └── theme-provider.tsx       # Provider de temas (next-themes)
+│
+├── lib/                         # Librerías y utilidades
+│   ├── analytics-service.ts     # Servicio de analytics y métricas
+│   ├── auth-store.ts            # Store de autenticación (Zustand)
+│   ├── farmanexo-data.ts       # Data mockeada para desarrollo
+│   ├── farmanexo-store.ts      # Store principal de la app
+│   ├── search-service.ts        # Servicio de búsqueda y comparación
+│   ├── types.ts                 # Tipos TypeScript del dominio
+│   └── utils.ts                 # Utilidades generales (cn, etc.)
+│
+├── public/                      # Archivos estáticos
+│   └── *.jpg                    # Logos de farmacias
+│
+├── BACKEND_API_SPEC.md          # Especificación completa del backend
+└── README.md                    # Este archivo
 ```
 
-## Hola Jira prueba 4
+## 🎨 Diseño y Tema
+
+### Paleta de Colores
+
+- **Brand Pink**: `#db1a85` (primario)
+- **Brand Teal**: `#0ec1ac` (secundario/accento)
+- **Modo Claro/Oscuro**: Totalmente soportado con next-themes
+
+### Responsive
+
+- Mobile-first design
+- Breakpoints: sm, md, lg, xl
+- Todos los componentes son completamente responsive
+
+## 🔐 Autenticación
+
+### Credenciales de Prueba (Mock)
+
+- **Email**: `demo@farmanexo.pe`
+- **Contraseña**: `Demo123!`
+
+### Funcionalidad Mock
+
+- Login y registro con validación
+- Persistencia en localStorage
+- Recuperación de contraseña (mock)
+- Gestión de perfil
+
+**⚠️ Nota**: El sistema de autenticación actual es mock para desarrollo. Se requiere implementar backend real con JWT/OAuth.
+
+## 📊 Data Mockeada
+
+El proyecto incluye data mockeada realista en `lib/farmanexo-data.ts`:
+
+- **1000+** medicamentos
+- **50+** farmacias
+- **200+** sucursales en Lima Metropolitana
+- Precios variables por farmacia y ubicación
+
+## 🤖 Chatbot IA
+
+### Características
+
+- Integración con Vercel AI SDK v5
+- Guardrails de seguridad (no diagnósticos ni prescripciones)
+- Disclaimers obligatorios
+- Tracking de interacciones
+- Solo disponible para usuarios autenticados
+
+### Configuración
+
+Requiere configurar el AI Gateway de Vercel o agregar API keys de proveedores de IA en variables de entorno.
+
+## 🚀 Instalación y Desarrollo
+
+### Prerrequisitos
+
+- Node.js 18+
+- npm o yarn
+
+### Instalación
+
+```bash
+# Clonar el repositorio
+git clone https://github.com/tu-usuario/proyecto-farma-nexo.git
+
+# Navegar al directorio
+cd proyecto-farma-nexo
+
+# Instalar dependencias
+npm install
+
+# Ejecutar en modo desarrollo
+npm run dev
+```
+
+La aplicación estará disponible en `http://localhost:3000`
+
+### Scripts Disponibles
+
+```bash
+npm run dev      # Servidor de desarrollo
+npm run build    # Build de producción
+npm run start    # Servidor de producción
+npm run lint     # Linter
+```
+
+## 🌐 Variables de Entorno
+
+```env
+# No requiere variables de entorno para funcionalidad básica
+# El AI Gateway de Vercel funciona automáticamente al desplegar
+
+# Opcional para desarrollo local del chatbot:
+# OPENAI_API_KEY=tu_api_key
+# ANTHROPIC_API_KEY=tu_api_key
+```
+
+## 📈 Métricas y Analytics
+
+El sistema trackea:
+
+- **Búsquedas**: términos, ubicación, resultados
+- **Clics**: en farmacias, mapas, links externos
+- **Conversiones**: visitas a farmacia, llamadas
+- **Chatbot**: interacciones, queries, respuestas
+
+Dashboard de métricas disponible en: (próximamente)
+
+## 🔄 Próximos Pasos
+
+### Backend (Ver BACKEND_API_SPEC.md)
+
+- [ ] API REST con autenticación JWT
+- [ ] Base de datos PostgreSQL
+- [ ] Integración con SNIP/APIs de farmacias
+- [ ] Sistema de scraping de precios
+- [ ] Analytics y reporting
+
+### Frontend
+
+- [ ] Notificaciones de cambios de precio
+- [ ] Sistema de alertas por medicamento
+- [ ] Comparación de múltiples medicamentos
+- [ ] PWA para instalación móvil
+
+## 👥 Contribución
+
+Por favor lee [CONTRIBUTING.md](CONTRIBUTING.md) para detalles sobre nuestro código de conducta y el proceso para enviar pull requests.
+
+## 📄 Licencia
+
+Este proyecto es privado y confidencial. Todos los derechos reservados © 2025 FarmaNexo.
+
+## 📞 Contacto
+
+- **Email**: <contacto@farmanexo.pe>
+- **Website**: <https://farmanexo.pe>
+
+---
+
+**Hecho en Lima, Perú**

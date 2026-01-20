@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useFarmaJustaStore } from "@/lib/farmajusta-store"
-import { mockDrugs } from "@/lib/farmajusta-data"
+import { useFarmaNexoStore } from "@/lib/farmanexo-store"
+import { mockDrugs } from "@/lib/farmanexo-data"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -36,7 +36,7 @@ interface UserProfile {
 export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   const [mounted, setMounted] = useState(false)
   const { favorites, searchHistory, searchRadius, toggleFavorite, clearSearchHistory, setSearchRadius } =
-    useFarmaJustaStore()
+    useFarmaNexoStore()
 
   useEffect(() => {
     setMounted(true)
@@ -321,7 +321,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                 </div>
                 <p className="text-xs text-muted-foreground">
                   <Shield className="size-3 inline mr-1" />
-                  Tus datos están protegidos y solo se usan para mejorar tu experiencia en FarmaJusta.
+                  Tus datos están protegidos y solo se usan para mejorar tu experiencia en FarmaNexo.
                 </p>
               </CardContent>
             </Card>

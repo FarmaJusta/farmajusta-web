@@ -18,7 +18,7 @@ import {
     Package,
     Clock,
 } from "lucide-react"
-import { useFarmaJustaStore, getShoppingListByPharmacy, getShoppingListTotal } from "@/lib/farmajusta-store"
+import { useFarmaNexoStore, getShoppingListByPharmacy, getShoppingListTotal } from "@/lib/farmanexo-store"
 import { toast } from "sonner"
 
 interface OrdersModalProps {
@@ -28,7 +28,7 @@ interface OrdersModalProps {
 
 export function OrdersModal({ isOpen, onClose }: OrdersModalProps) {
     const [mounted, setMounted] = useState(false)
-    const { shoppingList, removeFromShoppingList, updateShoppingListQuantity, clearShoppingList } = useFarmaJustaStore()
+    const { shoppingList, removeFromShoppingList, updateShoppingListQuantity, clearShoppingList } = useFarmaNexoStore()
 
     useEffect(() => {
         setMounted(true)

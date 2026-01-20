@@ -250,10 +250,10 @@ export function generateSessionId(): string {
         return crypto.randomUUID()
     }
 
-    let sessionId = sessionStorage.getItem("farmajusta_session_id")
+    let sessionId = sessionStorage.getItem("farmanexo_session_id")
     if (!sessionId) {
         sessionId = crypto.randomUUID()
-        sessionStorage.setItem("farmajusta_session_id", sessionId)
+        sessionStorage.setItem("farmanexo_session_id", sessionId)
     }
     return sessionId
 }
