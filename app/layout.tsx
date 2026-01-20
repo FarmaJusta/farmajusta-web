@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FarmaJusta - Encuentra medicamentos al mejor precio",
+  title: "FarmaNexo - Encuentra medicamentos al mejor precio",
   description: "Compara precios de medicamentos en farmacias cercanas y ahorra hasta 50% en genéricos de calidad",
 };
 

@@ -9,10 +9,10 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Pill, Search, Heart, AlertCircle, CheckCircle2, TrendingDown } from "lucide-react"
 import type { Drug, DrugPrice } from "@/lib/types"
-import { mockDrugs, mockPrices } from "@/lib/farmajusta-data"
+import { mockDrugs, mockPrices } from "@/lib/farmanexo-data"
 import { cn } from "@/lib/utils"
 import { DrugDetailModal } from "@/components/drug-detail-modal"
-import { useFarmaJustaStore } from "@/lib/farmajusta-store"
+import { useFarmaNexoStore } from "@/lib/farmanexo-store"
 
 interface DrugCatalogProps {
     onDrugSelect: (drug: Drug) => void
@@ -36,7 +36,7 @@ export function DrugCatalog({ onDrugSelect }: DrugCatalogProps) {
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false)
     const [mounted, setMounted] = useState(false)
 
-    const { favorites, toggleFavorite } = useFarmaJustaStore()
+    const { favorites, toggleFavorite } = useFarmaNexoStore()
 
     useEffect(() => {
         setMounted(true)
@@ -173,15 +173,15 @@ export function DrugCatalog({ onDrugSelect }: DrugCatalogProps) {
                         <Card
                             key={drug.id}
                             className={cn(
-                                "group hover:shadow-lg transition-all cursor-pointer border-2",
-                                "hover:border-brand-teal/50",
+                                "group hover:shadow-lg transition-all cursor-pointer border-l-4 border-l-transparent",
+                                "hover:border-l-[#7C3AED]",
                             )}
                             onClick={() => handleDrugClick(drug)}
                         >
                             <CardHeader className="pb-2 sm:pb-4">
                                 <div className="flex items-start justify-between gap-2">
                                     <div className="flex-1 min-w-0">
-                                        <CardTitle className="text-base sm:text-lg group-hover:text-brand-teal transition-colors truncate">
+                                        <CardTitle className="text-base sm:text-lg group-hover:text-[#7C3AED] transition-colors truncate">
                                             {drug.commercialNames?.[0] || drug.dci}
                                         </CardTitle>
                                         <CardDescription className="mt-1 text-xs sm:text-sm truncate">
@@ -194,8 +194,8 @@ export function DrugCatalog({ onDrugSelect }: DrugCatalogProps) {
                                         className={cn(
                                             "shrink-0 size-8 sm:size-9",
                                             isFavorite
-                                                ? "text-brand-pink hover:text-brand-pink/80"
-                                                : "text-muted-foreground hover:text-brand-pink",
+                                                ? "text-[#7C3AED] hover:text-[#7C3AED]/80"
+                                                : "text-muted-foreground hover:text-[#7C3AED]",
                                         )}
                                         onClick={(e) => handleToggleFavorite(e, drug.id)}
                                     >
@@ -235,7 +235,7 @@ export function DrugCatalog({ onDrugSelect }: DrugCatalogProps) {
                                         <div className="flex items-baseline justify-between">
                                             <span className="text-xs sm:text-sm text-muted-foreground">Desde</span>
                                             <div className="text-right">
-                                                <span className="text-xl sm:text-2xl font-bold text-brand-pink">
+                                                <span className="text-xl sm:text-2xl font-bold text-[#7C3AED]">
                                                     S/ {drug.minPrice.toFixed(2)}
                                                 </span>
                                             </div>
@@ -249,11 +249,11 @@ export function DrugCatalog({ onDrugSelect }: DrugCatalogProps) {
 
                             <CardFooter className="pt-0">
                                 <Button
-                                    className="w-full group-hover:bg-brand-teal group-hover:text-white transition-colors text-xs sm:text-sm"
+                                    className="w-full bg-brand-coral hover:bg-brand-coral/90 text-white transition-colors text-xs sm:text-sm"
                                     size="sm"
                                 >
                                     <TrendingDown className="size-3 sm:size-4 mr-1 sm:mr-2" />
-                                    Comparar precios
+                                    Agregar al carrito
                                 </Button>
                             </CardFooter>
                         </Card>

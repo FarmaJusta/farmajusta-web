@@ -3,7 +3,7 @@ import { generateText } from "ai"
 export const runtime = "edge"
 
 // Sistema de guardrails según NFR-04
-const SYSTEM_PROMPT = `Eres un asistente educativo farmacéutico de FarmaJusta. Tu objetivo es proporcionar información orientativa sobre medicamentos.
+const SYSTEM_PROMPT = `Eres un asistente educativo farmacéutico de FarmaNexo. Tu objetivo es proporcionar información orientativa sobre medicamentos.
 
 REGLAS ESTRICTAS (NO PUEDES VIOLARLAS):
 1. NO des diagnósticos médicos
@@ -79,7 +79,7 @@ export async function POST(req: Request) {
             if (aiError?.message?.includes("Gateway") || aiError?.message?.includes("access failed")) {
                 return Response.json({
                     response:
-                        "El chatbot de IA requiere estar desplegado en Vercel para funcionar. En desarrollo local, puedes probar las demás funcionalidades de FarmaJusta.\n\nPara preguntas sobre medicamentos, te recomiendo consultar con un farmacéutico profesional.\n\n⚠️ Esta información es orientativa y no sustituye la evaluación de un profesional de la salud.",
+                        "El chatbot de IA requiere estar desplegado en Vercel para funcionar. En desarrollo local, puedes probar las demás funcionalidades de FarmaNexo.\n\nPara preguntas sobre medicamentos, te recomiendo consultar con un farmacéutico profesional.\n\n⚠️ Esta información es orientativa y no sustituye la evaluación de un profesional de la salud.",
                     sessionId: sessionId || crypto.randomUUID(),
                 })
             }

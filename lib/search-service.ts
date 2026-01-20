@@ -1,5 +1,5 @@
 import type { Drug, PharmacyBranch, DrugComparisonResult, SearchFilters, LocationData } from "./types"
-import { mockDrugs, mockBranches, mockPrices, getDrugById, getBranchById } from "./farmajusta-data"
+import { mockDrugs, mockBranches, mockPrices, getDrugById, getBranchById } from "./farmanexo-data"
 
 /**
  * FR-01: Búsqueda de medicamentos por DCI o marca

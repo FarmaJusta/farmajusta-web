@@ -20,8 +20,8 @@ import {
     Loader2,
     Heart,
 } from "lucide-react"
-import { mockDrugs, mockPrices, mockBranches, mockPharmacies } from "@/lib/farmajusta-data"
-import { useFarmaJustaStore } from "@/lib/farmajusta-store"
+import { mockDrugs, mockPrices, mockBranches, mockPharmacies } from "@/lib/farmanexo-data"
+import { useFarmaNexoStore } from "@/lib/farmanexo-store"
 import { Toaster, toast } from "sonner"
 import type { Drug, DrugPrice, PharmacyBranch, Pharmacy } from "@/lib/types"
 
@@ -32,7 +32,7 @@ export default function MedicamentoPage({ params }: { params: { id: string } }) 
     const [isLoading, setIsLoading] = useState(true)
     const [mounted, setMounted] = useState(false)
 
-    const { favorites, toggleFavorite } = useFarmaJustaStore()
+    const { favorites, toggleFavorite } = useFarmaNexoStore()
 
     useEffect(() => {
         setMounted(true)
@@ -315,10 +315,10 @@ export default function MedicamentoPage({ params }: { params: { id: string } }) 
                                         <div className="flex items-center gap-3">
                                             <span
                                                 className={`text-sm font-bold w-6 h-6 rounded-full flex items-center justify-center ${index === 0
-                                                        ? "bg-brand-teal text-white"
-                                                        : index === 1
-                                                            ? "bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200"
-                                                            : "bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
+                                                    ? "bg-brand-teal text-white"
+                                                    : index === 1
+                                                        ? "bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200"
+                                                        : "bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
                                                     }`}
                                             >
                                                 {index + 1}
